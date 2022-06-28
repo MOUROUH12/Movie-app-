@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {BiSearch} from 'react-icons/bi'
 import MovieCard from './MovieCard'
 import './App.css'
@@ -8,6 +8,7 @@ import './App.css'
 const API_URL = 'http://www.omdbapi.com/?i=tt3896198&apikey=1b035f63'
 const App = () => {
     const [movies,setMovies] = useState([])
+    const movieName = useRef('')
     const [movieQuery,setMovieQuery] = useState('')
     const searchMovies = async (title) => {
         const res = await fetch(`${API_URL}&s=${title}`)
@@ -16,18 +17,18 @@ const App = () => {
         // console.log(movies_data.Search)
     }
     useEffect(()=>{
-        // document.addEventListener('keydown',(e) => {
-        //     if(e.keyCode === 13) {
-        //         searchMovies(movieQuery)
-        //     }
-        // })
+        document.addEventListener('keydown',(e) => {
+            if(e.keyCode === 13) {
+                searchMovies(movieName.current.value)
+            }
+        })
         searchMovies('superman')
     },[])
     return(
         <div className="app">
             <h1>MovieLand</h1>
             <div className="search">
-                <input placeholder="Search for movies" value={movieQuery} onChange={(e) => {setMovieQuery(e.target.value)}}/>
+                <input placeholder="Search for movies" value={movieQuery} ref={movieName} onChange={(e) => {setMovieQuery(e.target.value)}}/>
                 <BiSearch onClick={() => {searchMovies(movieQuery)}} />
             </div>
             {
@@ -45,5 +46,6 @@ const App = () => {
         </div>
     )
 }
+
 
 export default App ;
